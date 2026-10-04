@@ -1,0 +1,6 @@
+{
+  "name": "RideFuel - Motorcycle Fuel, Mileage & Maintenance Tracker",
+  "description": "Production-grade PWA for personal motorcycle fuel tracking, range estimation, mileage analytics, expense management, and maintenance logs for Royal Enfield Classic 350 and multi-bike fleets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
