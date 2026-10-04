@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/lib/auth/context';
 import type { MaintenanceRecord } from '@/types';
 import { Wrench, Calendar, MapPin, DollarSign, CheckCircle2 } from 'lucide-react';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
+import { ListSkeleton } from '@/components/ui/page-skeleton';
 
 export default function ServiceHistoryPage() {
   const { activeBike, user } = useAuth();
@@ -16,7 +18,10 @@ export default function ServiceHistoryPage() {
   const distanceUnit = user?.distanceUnit || 'km';
 
   useEffect(() => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     fetch(`/api/maintenance?bikeId=${activeBike.id}`)
       .then((res) => res.json())
@@ -29,6 +34,10 @@ export default function ServiceHistoryPage() {
   }, [activeBike]);
 
   const totalSpent = records.reduce((acc, r) => acc + (r.amount || 0), 0);
+
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
 
   return (
     <div className="space-y-6">
@@ -49,7 +58,14 @@ export default function ServiceHistoryPage() {
       </div>
 
       <div className="space-y-4">
-        {records.map((rec, index) => (
+        {loading ? (
+          <ListSkeleton count={3} height="h-28" />
+        ) : records.length === 0 ? (
+          <Card className="text-center py-12 text-slate-400 text-xs">
+            No service history recorded yet.
+          </Card>
+        ) : (
+        records.map((rec, index) => (
           <Card key={rec.id} className="p-5 border-slate-800 hover:border-slate-700 transition">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
               <div className="space-y-2">
@@ -90,7 +106,8 @@ export default function ServiceHistoryPage() {
               </div>
             </div>
           </Card>
-        ))}
+        ))
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input, Label } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Fuel, CheckCircle2, AlertCircle } from 'lucide-react';
+import { RequireGuest } from '@/components/auth/require-guest';
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -116,14 +117,16 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs">
-          Loading reset password form...
-        </div>
-      }
-    >
-      <ResetPasswordForm />
-    </Suspense>
+    <RequireGuest>
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs">
+            Loading reset password form...
+          </div>
+        }
+      >
+        <ResetPasswordForm />
+      </Suspense>
+    </RequireGuest>
   );
 }

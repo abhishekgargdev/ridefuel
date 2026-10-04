@@ -3,8 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, Fuel, Gauge, DollarSign, Wrench } from 'lucide-react';
+import { Compass, Fuel, DollarSign, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { isNavActive } from '@/lib/navigation';
 
 export function MobileNav({
   onOpenQuickAction,
@@ -20,7 +21,7 @@ export function MobileNav({
           href="/dashboard"
           className={cn(
             'flex flex-col items-center justify-center p-2 rounded-xl transition',
-            pathname === '/dashboard' ? 'text-amber-400 font-bold' : 'text-slate-400'
+            isNavActive(pathname, '/dashboard', 'exact') ? 'text-amber-400 font-bold' : 'text-slate-400'
           )}
         >
           <Compass className="w-5 h-5" />
@@ -31,7 +32,7 @@ export function MobileNav({
           href="/dashboard/fuel"
           className={cn(
             'flex flex-col items-center justify-center p-2 rounded-xl transition',
-            pathname === '/dashboard/fuel' ? 'text-amber-400 font-bold' : 'text-slate-400'
+            isNavActive(pathname, '/dashboard/fuel') ? 'text-amber-400 font-bold' : 'text-slate-400'
           )}
         >
           <Fuel className="w-5 h-5" />
@@ -54,7 +55,7 @@ export function MobileNav({
           href="/dashboard/expenses"
           className={cn(
             'flex flex-col items-center justify-center p-2 rounded-xl transition',
-            pathname === '/dashboard/expenses' ? 'text-amber-400 font-bold' : 'text-slate-400'
+            isNavActive(pathname, '/dashboard/expenses') ? 'text-amber-400 font-bold' : 'text-slate-400'
           )}
         >
           <DollarSign className="w-5 h-5" />
@@ -65,7 +66,7 @@ export function MobileNav({
           href="/dashboard/maintenance"
           className={cn(
             'flex flex-col items-center justify-center p-2 rounded-xl transition',
-            pathname === '/dashboard/maintenance' ? 'text-amber-400 font-bold' : 'text-slate-400'
+            isNavActive(pathname, '/dashboard/maintenance') ? 'text-amber-400 font-bold' : 'text-slate-400'
           )}
         >
           <Wrench className="w-5 h-5" />

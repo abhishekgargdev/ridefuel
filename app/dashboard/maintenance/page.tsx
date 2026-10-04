@@ -20,6 +20,8 @@ import {
   Calendar,
   AlertCircle,
 } from 'lucide-react';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
+import { ListSkeleton, StatCardsSkeleton } from '@/components/ui/page-skeleton';
 
 export default function MaintenancePage() {
   const { activeBike, user } = useAuth();
@@ -46,7 +48,10 @@ export default function MaintenancePage() {
   });
 
   const fetchRecords = useCallback(async () => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch(`/api/maintenance?bikeId=${activeBike.id}`);
@@ -165,6 +170,19 @@ export default function MaintenancePage() {
 
   const completedList = records.filter((r) => r.status === 'completed');
   const totalMaintenanceCost = completedList.reduce((acc, r) => acc + r.amount, 0);
+
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <StatCardsSkeleton />
+        <ListSkeleton count={4} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth/context';
 import type { RangeEstimateResult } from '@/lib/services/range-calculator';
 import { Gauge, Fuel, AlertTriangle, Info, Compass, Calculator } from 'lucide-react';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
+import { PageSkeleton } from '@/components/ui/page-skeleton';
 
 export default function RangeCalculatorPage() {
   const { activeBike, user } = useAuth();
@@ -22,7 +24,10 @@ export default function RangeCalculatorPage() {
   const fuelUnit = user?.fuelUnit === 'gallons' ? 'gal' : 'L';
 
   useEffect(() => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     fetch(`/api/analytics/range?bikeId=${activeBike.id}`)
       .then((res) => res.json())
@@ -50,6 +55,14 @@ export default function RangeCalculatorPage() {
 
   const reserveLevel = activeBike?.reserveCapacity || 2.6;
   const isReserve = simFuel !== null && simFuel <= reserveLevel;
+
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
+
+  if (loading) {
+    return <PageSkeleton variant="analytics" />;
+  }
 
   return (
     <div className="space-y-6">

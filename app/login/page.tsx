@@ -8,11 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Input, Label } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Fuel, AlertCircle, Zap } from 'lucide-react';
+import { RequireGuest } from '@/components/auth/require-guest';
+import { getSafeRedirect } from '@/lib/auth/routes';
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/dashboard';
+  const redirect = getSafeRedirect(searchParams.get('redirect'));
   const { login } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -28,7 +30,8 @@ function LoginForm() {
     try {
       const res = await login(email, password);
       if (res.success) {
-        router.push(redirect);
+        router.replace(redirect);
+        router.refresh();
       } else {
         setError(res.error || 'Invalid email or password');
       }
@@ -45,12 +48,14 @@ function LoginForm() {
     try {
       const res = await login('demo@ridefuel.com', 'Password123!');
       if (res.success) {
-        router.push(redirect);
+        router.replace(redirect);
+        router.refresh();
       } else {
         await fetch('/api/seed', { method: 'POST' });
         const retryRes = await login('demo@ridefuel.com', 'Password123!');
         if (retryRes.success) {
-          router.push(redirect);
+          router.replace(redirect);
+          router.refresh();
         } else {
           setError('Failed to auto-sign in to demo. Please try again.');
         }
@@ -159,14 +164,16 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs">
-          Loading login form...
-        </div>
-      }
-    >
-      <LoginForm />
-    </Suspense>
+    <RequireGuest>
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs">
+            Loading login form...
+          </div>
+        }
+      >
+        <LoginForm />
+      </Suspense>
+    </RequireGuest>
   );
 }

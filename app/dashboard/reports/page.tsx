@@ -5,7 +5,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/lib/auth/context';
-import { FileText, Calendar, DollarSign, Fuel, Wrench, Download, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
+import { TableSkeleton } from '@/components/ui/page-skeleton';
 
 interface ReportRow {
   month?: string;
@@ -31,7 +33,10 @@ export default function ReportsPage() {
   const fuelUnit = user?.fuelUnit === 'gallons' ? 'gal' : 'L';
 
   useEffect(() => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     const endpoint = tab === 'monthly' ? '/api/reports/monthly' : '/api/reports/yearly';
     fetch(`${endpoint}?bikeId=${activeBike.id}`)
@@ -47,6 +52,10 @@ export default function ReportsPage() {
   const handlePrint = () => {
     window.print();
   };
+
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
 
   return (
     <div className="space-y-6">
@@ -94,7 +103,9 @@ export default function ReportsPage() {
         </CardHeader>
 
         <CardContent className="p-0 overflow-x-auto">
-          {reports.length === 0 ? (
+          {loading ? (
+            <TableSkeleton rows={6} />
+          ) : reports.length === 0 ? (
             <div className="text-center py-12 text-slate-400 text-xs">
               No report statements generated yet.
             </div>

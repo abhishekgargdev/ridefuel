@@ -9,6 +9,8 @@ import { Input, Label } from '@/components/ui/input';
 import { useAuth } from '@/lib/auth/context';
 import type { DailyReading } from '@/types';
 import { Gauge, Plus, Edit2, Trash2, AlertCircle, Compass, Calendar } from 'lucide-react';
+import { ListSkeleton } from '@/components/ui/page-skeleton';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
 
 export default function DailyReadingsPage() {
   const { activeBike, user } = useAuth();
@@ -28,7 +30,10 @@ export default function DailyReadingsPage() {
   });
 
   const fetchReadings = useCallback(async () => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch(`/api/readings?bikeId=${activeBike.id}`);
@@ -117,6 +122,10 @@ export default function DailyReadingsPage() {
 
   const totalLoggedDistance = readings.reduce((acc, r) => acc + (r.distance || 0), 0);
 
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -160,10 +169,7 @@ export default function DailyReadingsPage() {
       {/* Readings List */}
       <div className="space-y-3">
         {loading ? (
-          <div className="space-y-3">
-            <Card className="h-20 animate-pulse" />
-            <Card className="h-20 animate-pulse" />
-          </div>
+          <ListSkeleton count={3} height="h-20" />
         ) : readings.length === 0 ? (
           <Card className="text-center py-12">
             <Gauge className="w-10 h-10 mx-auto text-slate-600 mb-2" />

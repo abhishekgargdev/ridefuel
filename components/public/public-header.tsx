@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Fuel, ArrowRight, Smartphone } from 'lucide-react';
+import { Fuel, ArrowRight } from 'lucide-react';
 import { PWAInstallButton } from '@/components/pwa/pwa-install-button';
 import { useAuth } from '@/lib/auth/context';
 
 export function PublicHeader() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl">
@@ -42,7 +42,9 @@ export function PublicHeader() {
           <div className="flex items-center gap-3">
             <PWAInstallButton />
 
-            {user ? (
+            {loading ? (
+              <div className="h-8 w-28 rounded-xl bg-slate-800 animate-pulse" />
+            ) : user ? (
               <Link
                 href="/dashboard"
                 className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-xl text-xs font-bold shadow-md transition active:scale-95"

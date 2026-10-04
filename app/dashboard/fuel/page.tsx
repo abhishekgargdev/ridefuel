@@ -9,6 +9,8 @@ import { Input, Label } from '@/components/ui/input';
 import { useAuth } from '@/lib/auth/context';
 import type { FuelLog } from '@/types';
 import { Fuel, Plus, Edit2, Trash2, MapPin, CreditCard, AlertCircle, Info, TrendingUp, Database, WifiOff } from 'lucide-react';
+import { ListSkeleton } from '@/components/ui/page-skeleton';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
 import { syncManager } from '@/lib/offline/sync-manager';
 import { OfflineDataCache } from '@/lib/offline/offline-cache';
 
@@ -42,7 +44,10 @@ export default function FuelLogsPage() {
   });
 
   const fetchLogs = useCallback(async () => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const result = await OfflineDataCache.fetchWithCache<FuelLog[]>(
@@ -183,6 +188,10 @@ export default function FuelLogsPage() {
   const totalSpend = logs.reduce((acc, l) => acc + l.totalAmount, 0);
   const fullTanksCount = logs.filter((l) => l.isFullTank).length;
 
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -238,10 +247,7 @@ export default function FuelLogsPage() {
       {/* Fuel Logs List */}
       <div className="space-y-3">
         {loading ? (
-          <div className="space-y-3">
-            <Card className="h-28 animate-pulse" />
-            <Card className="h-28 animate-pulse" />
-          </div>
+          <ListSkeleton count={3} height="h-28" />
         ) : logs.length === 0 ? (
           <Card className="text-center py-12">
             <Fuel className="w-10 h-10 mx-auto text-slate-600 mb-2" />

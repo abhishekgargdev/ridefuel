@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input, Label } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Fuel, CheckCircle2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { RequireGuest } from '@/components/auth/require-guest';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -42,6 +43,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
+    <RequireGuest>
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-2">
         <Link href="/" className="inline-flex items-center gap-2 group">
@@ -109,5 +111,6 @@ export default function ForgotPasswordPage() {
         </Card>
       </div>
     </div>
+    </RequireGuest>
   );
 }

@@ -4,10 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/lib/auth/context';
 import type { MileageStats } from '@/lib/services/mileage-calculator';
 import { TrendingUp, Award, ArrowDown, ArrowUp, Calendar, Info, Fuel, AlertCircle } from 'lucide-react';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
+import { PageSkeleton } from '@/components/ui/page-skeleton';
+import Link from 'next/link';
 
 export default function MileageAnalyticsPage() {
   const { activeBike, user } = useAuth();
@@ -19,7 +21,10 @@ export default function MileageAnalyticsPage() {
   const fuelUnit = user?.fuelUnit === 'gallons' ? 'gal' : 'L';
 
   useEffect(() => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     fetch(`/api/analytics/mileage?bikeId=${activeBike.id}`)
       .then((res) => res.json())
@@ -31,6 +36,10 @@ export default function MileageAnalyticsPage() {
       .catch((e) => console.warn(e))
       .finally(() => setLoading(false));
   }, [activeBike]);
+
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
 
   return (
     <div className="space-y-6">
@@ -61,12 +70,7 @@ export default function MileageAnalyticsPage() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-        </div>
+        <PageSkeleton variant="analytics" />
       ) : !stats || !stats.hasEnoughData ? (
         <Card className="text-center py-12">
           <AlertCircle className="w-10 h-10 mx-auto text-amber-400 mb-2" />
@@ -74,9 +78,11 @@ export default function MileageAnalyticsPage() {
           <p className="text-xs text-slate-400 max-w-md mx-auto mt-1 mb-4">
             You need at least <strong>two consecutive full-tank refills</strong> to compute authentic mileage.
           </p>
-          <Button onClick={() => (window.location.href = '/dashboard/fuel')} variant="primary" size="sm">
-            <Fuel className="w-4 h-4 mr-1.5" /> Add Full Tank Refill
-          </Button>
+          <Link href="/dashboard/fuel">
+            <Button variant="primary" size="sm">
+              <Fuel className="w-4 h-4 mr-1.5" /> Add Full Tank Refill
+            </Button>
+          </Link>
         </Card>
       ) : (
         <>

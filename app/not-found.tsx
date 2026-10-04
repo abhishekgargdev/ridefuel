@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Fuel, ArrowLeft, Compass } from 'lucide-react';
+import { ArrowLeft, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
@@ -15,14 +15,14 @@ export default function NotFound() {
         The motorcycle telemetry route or resource you are seeking does not exist or has been relocated.
       </p>
       <div className="flex gap-3">
-        <Link href="/dashboard">
+        <Link href="/">
           <Button variant="primary" size="md">
-            Go to Dashboard
+            <ArrowLeft className="w-4 h-4 mr-1.5" /> Back Home
           </Button>
         </Link>
-        <Link href="/">
+        <Link href="/login">
           <Button variant="outline" size="md">
-            <ArrowLeft className="w-4 h-4 mr-1.5" /> Back Home
+            Sign In
           </Button>
         </Link>
       </div>

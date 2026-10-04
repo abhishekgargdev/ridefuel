@@ -7,11 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog } from '@/components/ui/dialog';
 import { Input, Label } from '@/components/ui/input';
 import { useAuth } from '@/lib/auth/context';
+import { PageSkeleton } from '@/components/ui/page-skeleton';
 import type { Bike } from '@/types';
 import { Bike as BikeIcon, Plus, Check, Edit2, Trash2, Fuel, Gauge, AlertCircle } from 'lucide-react';
 
 export default function BikesPage() {
-  const { bikes, activeBike, switchActiveBike, refreshUserData, user } = useAuth();
+  const { bikes, activeBike, switchActiveBike, refreshUserData, user, loading: authLoading } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBike, setEditingBike] = useState<Bike | null>(null);
   const [loading, setLoading] = useState(false);
@@ -130,6 +131,10 @@ export default function BikesPage() {
       alert('Failed to delete bike');
     }
   };
+
+  if (authLoading) {
+    return <PageSkeleton variant="list" />;
+  }
 
   return (
     <div className="space-y-6">

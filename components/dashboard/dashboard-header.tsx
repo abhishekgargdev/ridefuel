@@ -23,6 +23,12 @@ import {
   User as UserIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  DASHBOARD_ACCOUNT_NAV,
+  DASHBOARD_MORE_NAV,
+  DASHBOARD_PRIMARY_NAV,
+  isNavActive,
+} from '@/lib/navigation';
 
 export function DashboardHeader({
   onOpenQuickModal,
@@ -33,18 +39,25 @@ export function DashboardHeader({
   const pathname = usePathname();
   const [bikeDropdownOpen, setBikeDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
 
-  const navLinks = [
-    { href: '/dashboard', label: 'Dashboard', icon: Compass },
-    { href: '/dashboard/fuel', label: 'Fuel Logs', icon: Fuel },
-    { href: '/dashboard/readings', label: 'Daily Readings', icon: Gauge },
-    { href: '/dashboard/mileage', label: 'Mileage', icon: TrendingUp },
-    { href: '/dashboard/range-calculator', label: 'Range Calc', icon: Gauge },
-    { href: '/dashboard/expenses', label: 'Expenses', icon: DollarSign },
-    { href: '/dashboard/maintenance', label: 'Maintenance', icon: Wrench },
-    { href: '/dashboard/reports', label: 'Reports', icon: FileText },
-    { href: '/dashboard/bikes', label: 'My Bikes', icon: BikeIcon },
-  ];
+  const iconByHref: Record<string, React.ComponentType<{ className?: string }>> = {
+    '/dashboard': Compass,
+    '/dashboard/fuel': Fuel,
+    '/dashboard/readings': Gauge,
+    '/dashboard/mileage': TrendingUp,
+    '/dashboard/range-calculator': Gauge,
+    '/dashboard/fuel-analytics': Fuel,
+    '/dashboard/expenses': DollarSign,
+    '/dashboard/maintenance': Wrench,
+    '/dashboard/reports': FileText,
+    '/dashboard/service-history': Wrench,
+    '/dashboard/bikes': BikeIcon,
+    '/dashboard/profile': UserIcon,
+    '/dashboard/settings': Settings,
+  };
+
+  const navLinks = [...DASHBOARD_PRIMARY_NAV, ...DASHBOARD_MORE_NAV];
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl">
@@ -137,9 +150,9 @@ export function DashboardHeader({
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname === link.href;
+            {DASHBOARD_PRIMARY_NAV.map((link) => {
+              const Icon = iconByHref[link.href];
+              const isActive = isNavActive(pathname, link.href, link.match);
               return (
                 <Link
                   key={link.href}
@@ -151,11 +164,52 @@ export function DashboardHeader({
                       : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900'
                   )}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  {Icon && <Icon className="w-3.5 h-3.5" />}
                   <span>{link.label}</span>
                 </Link>
               );
             })}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setMoreOpen((open) => !open)}
+                className={cn(
+                  'flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition',
+                  DASHBOARD_MORE_NAV.some((link) => isNavActive(pathname, link.href, link.match))
+                    ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900'
+                )}
+              >
+                More
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              {moreOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setMoreOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-slate-800 bg-slate-900 p-2 shadow-2xl z-50">
+                    {DASHBOARD_MORE_NAV.map((link) => {
+                      const Icon = iconByHref[link.href];
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setMoreOpen(false)}
+                          className={cn(
+                            'flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl',
+                            isNavActive(pathname, link.href, link.match)
+                              ? 'bg-amber-500 text-slate-950 font-bold'
+                              : 'text-slate-300 hover:bg-slate-800'
+                          )}
+                        >
+                          {Icon && <Icon className="w-3.5 h-3.5" />}
+                          {link.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
           </nav>
 
           {/* Header Right Actions */}
@@ -236,15 +290,20 @@ export function DashboardHeader({
 
           <div className="grid grid-cols-2 gap-1.5">
             {navLinks.map((link) => {
-              const Icon = link.icon;
+              const Icon = iconByHref[link.href];
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-900"
+                  className={cn(
+                    'flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium',
+                    isNavActive(pathname, link.href, link.match)
+                      ? 'bg-amber-500/15 text-amber-300'
+                      : 'text-slate-300 hover:bg-slate-900'
+                  )}
                 >
-                  <Icon className="w-4 h-4 text-amber-400" />
+                  {Icon && <Icon className="w-4 h-4 text-amber-400" />}
                   <span>{link.label}</span>
                 </Link>
               );
@@ -253,20 +312,16 @@ export function DashboardHeader({
 
           <div className="border-t border-slate-800 pt-3 flex items-center justify-between text-xs text-slate-400">
             <div className="flex items-center gap-3">
-              <Link
-                href="/dashboard/profile"
-                onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-amber-400 font-semibold"
-              >
-                Profile
-              </Link>
-              <Link
-                href="/dashboard/settings"
-                onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-amber-400 font-semibold"
-              >
-                Settings
-              </Link>
+              {DASHBOARD_ACCOUNT_NAV.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-400 font-semibold"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
             <button
               onClick={() => {

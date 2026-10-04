@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/lib/auth/context';
 import type { FuelAnalyticsSummary } from '@/lib/services/fuel-calculator';
 import { Fuel, DollarSign, MapPin, TrendingUp, Calendar } from 'lucide-react';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
+import { PageSkeleton } from '@/components/ui/page-skeleton';
 
 export default function FuelAnalyticsPage() {
   const { activeBike, user } = useAuth();
@@ -16,7 +17,10 @@ export default function FuelAnalyticsPage() {
   const fuelUnit = user?.fuelUnit === 'gallons' ? 'gal' : 'L';
 
   useEffect(() => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     fetch(`/api/analytics/fuel?bikeId=${activeBike.id}`)
       .then((res) => res.json())
@@ -28,6 +32,10 @@ export default function FuelAnalyticsPage() {
       .catch((e) => console.warn(e))
       .finally(() => setLoading(false));
   }, [activeBike]);
+
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
 
   return (
     <div className="space-y-6">
@@ -42,12 +50,7 @@ export default function FuelAnalyticsPage() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-        </div>
+        <PageSkeleton variant="analytics" />
       ) : !analytics || analytics.totalRefills === 0 ? (
         <Card className="text-center py-12">
           <Fuel className="w-10 h-10 mx-auto text-slate-600 mb-2" />

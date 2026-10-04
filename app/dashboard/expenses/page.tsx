@@ -10,6 +10,8 @@ import { useAuth } from '@/lib/auth/context';
 import type { Expense, ExpenseCategory } from '@/types';
 import { expenseCategories } from '@/lib/validations/expense';
 import { DollarSign, Plus, Edit2, Trash2, Tag, Calendar, AlertCircle } from 'lucide-react';
+import { ListSkeleton } from '@/components/ui/page-skeleton';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
 
 export default function ExpensesPage() {
   const { activeBike, user } = useAuth();
@@ -34,7 +36,10 @@ export default function ExpensesPage() {
   });
 
   const fetchExpenses = useCallback(async () => {
-    if (!activeBike) return;
+    if (!activeBike) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch(`/api/expenses?bikeId=${activeBike.id}`);
@@ -134,6 +139,10 @@ export default function ExpensesPage() {
 
   const totalSpent = filteredExpenses.reduce((acc, curr) => acc + curr.amount, 0);
 
+  if (!activeBike) {
+    return <EmptyBikeState />;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -189,10 +198,7 @@ export default function ExpensesPage() {
       {/* Expenses List */}
       <div className="space-y-3">
         {loading ? (
-          <div className="space-y-3">
-            <Card className="h-20 animate-pulse" />
-            <Card className="h-20 animate-pulse" />
-          </div>
+          <ListSkeleton count={3} height="h-20" />
         ) : filteredExpenses.length === 0 ? (
           <Card className="text-center py-12">
             <DollarSign className="w-10 h-10 mx-auto text-slate-600 mb-2" />

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input, Label } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Fuel, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { RequireGuest } from '@/components/auth/require-guest';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -26,7 +27,8 @@ export default function SignupPage() {
     try {
       const res = await signup(name, email, password);
       if (res.success) {
-        router.push('/dashboard');
+        router.replace('/dashboard');
+        router.refresh();
       } else {
         setError(res.error || 'Failed to create account');
       }
@@ -38,6 +40,7 @@ export default function SignupPage() {
   };
 
   return (
+    <RequireGuest>
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-2">
         <Link href="/" className="inline-flex items-center gap-2 group">
@@ -111,5 +114,6 @@ export default function SignupPage() {
         </Card>
       </div>
     </div>
+    </RequireGuest>
   );
 }

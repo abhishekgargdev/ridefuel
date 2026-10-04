@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DashboardCharts } from '@/components/charts/dashboard-charts';
@@ -20,7 +22,6 @@ import {
   AlertTriangle,
   Wrench,
   Clock,
-  Plus,
   RefreshCw,
   CalendarRange,
   ChevronDown,
@@ -33,9 +34,11 @@ import {
   Zap,
 } from 'lucide-react';
 import { OfflineDataCache } from '@/lib/offline/offline-cache';
+import { EmptyBikeState } from '@/components/dashboard/empty-bike-state';
 
 export default function DashboardPage() {
   const { user, activeBike, bikes, switchActiveBike } = useAuth();
+  const router = useRouter();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [charts, setCharts] = useState<DashboardChartsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -154,7 +157,7 @@ export default function DashboardPage() {
   const handleBikeChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
     if (val === 'new_bike') {
-      window.location.href = '/dashboard/bikes';
+      router.push('/dashboard/bikes');
       return;
     }
     if (val && val !== activeBike?.id) {
@@ -169,20 +172,7 @@ export default function DashboardPage() {
   };
 
   if (!activeBike) {
-    return (
-      <div className="text-center py-16 space-y-4">
-        <div className="w-16 h-16 mx-auto rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-          <Fuel className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-bold text-slate-100">No Motorcycle Configured</h2>
-        <p className="text-sm text-slate-400 max-w-md mx-auto">
-          Add your Royal Enfield Classic 350 or other motorcycle to start tracking fuel telemetry, mileage, and maintenance.
-        </p>
-        <Button onClick={() => (window.location.href = '/dashboard/bikes')} variant="primary">
-          <Plus className="w-4 h-4 mr-2" /> Add Your Bike
-        </Button>
-      </div>
-    );
+    return <EmptyBikeState />;
   }
 
   // Current odometer (dynamic from summary, synchronized with latest valid readings)
@@ -535,9 +525,9 @@ export default function DashboardPage() {
             </div>
 
             <div className="pt-3 mt-3 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
-              <a href="/dashboard/maintenance" className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
+              <Link href="/dashboard/maintenance" className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
                 View Schedule <ChevronRight className="w-3 h-3" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -588,9 +578,9 @@ export default function DashboardPage() {
             </div>
 
             <div className="pt-3 mt-3 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
-              <a href="/dashboard/fuel" className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
+              <Link href="/dashboard/fuel" className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
                 Refill History <ChevronRight className="w-3 h-3" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -639,9 +629,9 @@ export default function DashboardPage() {
             </div>
 
             <div className="pt-3 mt-3 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
-              <a href="/dashboard/expenses" className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
+              <Link href="/dashboard/expenses" className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
                 View All Expenses <ChevronRight className="w-3 h-3" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
