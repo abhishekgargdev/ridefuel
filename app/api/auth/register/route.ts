@@ -23,22 +23,6 @@ export async function POST(req: NextRequest) {
       passwordHash,
     });
 
-    // Create initial motorcycle profile for the new user automatically
-    const defaultBike = await Repository.createBike(newUser.id, {
-      name: 'My Motorcycle',
-      manufacturer: 'Motorcycle',
-      model: 'Standard',
-      variant: '',
-      year: new Date().getFullYear(),
-      initialOdometer: 0,
-      currentOdometer: 0,
-      tankCapacity: 13,
-      reserveCapacity: 2.6,
-      expectedMileage: 35.0,
-      isActive: true,
-      notes: '',
-    });
-
     const token = await signToken({
       userId: newUser.id,
       email: newUser.email,
@@ -48,7 +32,7 @@ export async function POST(req: NextRequest) {
     const response = successResponse(
       {
         user: newUser,
-        bike: defaultBike,
+        bike: null,
         message: 'Account created successfully',
       },
       201

@@ -84,7 +84,7 @@ function LoginForm() {
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4">
         {/* Quick Demo Test Drive Box */}
-        <div className="mb-4 p-4 rounded-2xl border border-amber-500/40 bg-amber-500/10 text-xs text-slate-200 space-y-2.5">
+        {/* <div className="mb-4 p-4 rounded-2xl border border-amber-500/40 bg-amber-500/10 text-xs text-slate-200 space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 font-bold text-amber-300">
               <Zap className="w-4 h-4 text-amber-400 fill-amber-400" />
@@ -107,7 +107,7 @@ function LoginForm() {
           >
             Sign in as Demo User (demo@ridefuel.com)
           </Button>
-        </div>
+        </div> */}
 
         <Card className="p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-4">

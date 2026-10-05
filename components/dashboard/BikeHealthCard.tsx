@@ -12,7 +12,7 @@ interface BikeHealthCardProps {
 type DisplayStatus = 'GOOD' | 'DUE SOON' | 'DUE' | 'OVERDUE' | 'NO DATA';
 
 export function BikeHealthCard({ healthScore, className = '' }: BikeHealthCardProps) {
-  const score = healthScore?.score ?? 92;
+  const score = healthScore?.score ?? 100;
 
   // Helper to map status to GOOD / DUE SOON / DUE / OVERDUE / NO DATA
   const mapStatus = (rawStatus?: HealthStatusLevel): DisplayStatus => {
@@ -24,8 +24,7 @@ export function BikeHealthCard({ healthScore, className = '' }: BikeHealthCardPr
   // Find category status from health items
   const getItemStatus = (categoryQuery: string): DisplayStatus => {
     if (!healthScore?.items || healthScore.items.length === 0) {
-      // Default to GOOD if in good standing
-      return score >= 90 ? 'GOOD' : 'DUE SOON';
+      return 'NO DATA';
     }
 
     const item = healthScore.items.find((i) =>
@@ -37,7 +36,7 @@ export function BikeHealthCard({ healthScore, className = '' }: BikeHealthCardPr
 
   // Chain combines Lubrication and Cleaning
   const getChainStatus = (): DisplayStatus => {
-    if (!healthScore?.items) return score >= 90 ? 'GOOD' : 'DUE SOON';
+    if (!healthScore?.items || healthScore.items.length === 0) return 'NO DATA';
     const lube = healthScore.items.find((i) => i.name.toLowerCase().includes('chain lubrication'));
     const clean = healthScore.items.find((i) => i.name.toLowerCase().includes('chain cleaning'));
 
