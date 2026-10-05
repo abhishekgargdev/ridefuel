@@ -24,8 +24,8 @@ export default function DailyReadingsPage() {
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
-    odometer: 8485,
-    notes: 'End of day riding reading',
+    odometer: activeBike?.currentOdometer || 0,
+    notes: '',
     allowCorrection: false,
   });
 
@@ -54,7 +54,7 @@ export default function DailyReadingsPage() {
 
   const openAddModal = () => {
     setEditingReading(null);
-    const lastOdo = readings.length > 0 ? readings[0].odometer + 35 : activeBike?.currentOdometer || 8450;
+    const lastOdo = readings.length > 0 ? readings[0].odometer : activeBike?.currentOdometer || 0;
     setFormData({
       date: new Date().toISOString().split('T')[0],
       odometer: lastOdo,

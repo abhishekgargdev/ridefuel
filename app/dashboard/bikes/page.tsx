@@ -19,29 +19,29 @@ export default function BikesPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    name: 'Royal Enfield Classic 350',
-    manufacturer: 'Royal Enfield',
-    model: 'Classic 350',
-    variant: 'Dark Series',
-    year: 2022,
-    registrationNumber: 'DL 01 AB 3500',
-    initialOdometer: 1200,
-    currentOdometer: 8450,
+    name: '',
+    manufacturer: '',
+    model: '',
+    variant: '',
+    year: new Date().getFullYear(),
+    registrationNumber: '',
+    initialOdometer: 0,
+    currentOdometer: 0,
     tankCapacity: 13,
     reserveCapacity: 2.6,
     expectedMileage: 35.0,
     isActive: true,
-    notes: 'Primary motorcycle for highway touring and daily commute.',
+    notes: '',
   });
 
   const openAddModal = () => {
     setEditingBike(null);
     setFormData({
-      name: 'Royal Enfield Classic 350',
-      manufacturer: 'Royal Enfield',
-      model: 'Classic 350',
-      variant: 'Dark Stealth Black',
-      year: 2022,
+      name: '',
+      manufacturer: '',
+      model: '',
+      variant: '',
+      year: new Date().getFullYear(),
       registrationNumber: '',
       initialOdometer: 0,
       currentOdometer: 0,

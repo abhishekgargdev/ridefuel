@@ -29,12 +29,12 @@ export function QuickActionModals({ activeModal, onClose, onSuccess }: QuickActi
   const [fuelData, setFuelData] = useState({
     date: today,
     time: new Date().toTimeString().substring(0, 5),
-    odometer: activeBike?.currentOdometer ? activeBike.currentOdometer + 150 : 8500,
-    fuelQuantity: 10.0,
-    pricePerLiter: 96.72,
-    totalAmount: 967.2,
+    odometer: activeBike?.currentOdometer || 0,
+    fuelQuantity: 0,
+    pricePerLiter: 0,
+    totalAmount: 0,
     isFullTank: true,
-    fuelStation: 'Indian Oil',
+    fuelStation: '',
     location: '',
     paymentMethod: 'UPI',
     notes: '',
@@ -99,8 +99,8 @@ export function QuickActionModals({ activeModal, onClose, onSuccess }: QuickActi
   // ================= READING FORM STATE =================
   const [readingData, setReadingData] = useState({
     date: today,
-    odometer: activeBike?.currentOdometer ? activeBike.currentOdometer + 35 : 8485,
-    notes: 'End of day riding distance',
+    odometer: activeBike?.currentOdometer || 0,
+    notes: '',
     allowCorrection: false,
   });
 
@@ -150,9 +150,9 @@ export function QuickActionModals({ activeModal, onClose, onSuccess }: QuickActi
   const [expenseData, setExpenseData] = useState({
     date: today,
     category: 'Cleaning',
-    amount: 250,
-    odometer: activeBike?.currentOdometer || 8450,
-    description: 'Motorcycle foam wash & chain wipe',
+    amount: 0,
+    odometer: activeBike?.currentOdometer || 0,
+    description: '',
     notes: '',
   });
 
@@ -203,13 +203,13 @@ export function QuickActionModals({ activeModal, onClose, onSuccess }: QuickActi
   const [maintenanceData, setMaintenanceData] = useState({
     date: today,
     serviceType: 'Chain lubrication',
-    odometer: activeBike?.currentOdometer || 8450,
-    amount: 300,
-    workshop: 'Local Garage / DIY',
-    description: 'Chain cleaned and lubed with Motul spray',
+    odometer: activeBike?.currentOdometer || 0,
+    amount: 0,
+    workshop: '',
+    description: '',
     nextDueDate: '',
-    nextDueOdometer: (activeBike?.currentOdometer || 8450) + 500,
-    notes: 'Every 500 km routine',
+    nextDueOdometer: activeBike?.currentOdometer || 0,
+    notes: '',
     status: 'completed' as const,
   });
 
@@ -262,29 +262,29 @@ export function QuickActionModals({ activeModal, onClose, onSuccess }: QuickActi
       setExpenseData((prev) => ({
         ...prev,
         category: 'Cleaning',
-        amount: 150,
-        description: 'Motorcycle foam wash & chain wipe',
-        odometer: activeBike?.currentOdometer || 8450,
+        amount: 0,
+        description: 'Bike Wash',
+        odometer: activeBike?.currentOdometer || 0,
       }));
     } else if (activeModal === 'chain_lube') {
       setMaintenanceData((prev) => ({
         ...prev,
         serviceType: 'Chain lubrication',
-        amount: 150,
-        workshop: 'Local Garage / DIY',
-        description: 'Chain cleaned and lubed with Motul spray',
-        odometer: activeBike?.currentOdometer || 8450,
-        nextDueOdometer: (activeBike?.currentOdometer || 8450) + 500,
+        amount: 0,
+        workshop: '',
+        description: 'Chain lubrication',
+        odometer: activeBike?.currentOdometer || 0,
+        nextDueOdometer: activeBike?.currentOdometer || 0,
       }));
     } else if (activeModal === 'service') {
       setMaintenanceData((prev) => ({
         ...prev,
         serviceType: 'General service',
-        amount: 1200,
-        workshop: 'Authorized Service Center',
-        description: 'Periodic routine inspection & service',
-        odometer: activeBike?.currentOdometer || 8450,
-        nextDueOdometer: (activeBike?.currentOdometer || 8450) + 3000,
+        amount: 0,
+        workshop: '',
+        description: 'General service',
+        odometer: activeBike?.currentOdometer || 0,
+        nextDueOdometer: activeBike?.currentOdometer || 0,
       }));
     }
   }, [activeModal, activeBike]);

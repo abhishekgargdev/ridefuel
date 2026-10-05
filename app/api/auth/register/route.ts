@@ -23,20 +23,20 @@ export async function POST(req: NextRequest) {
       passwordHash,
     });
 
-    // Create initial Royal Enfield Classic 350 for the new user automatically
+    // Create initial motorcycle profile for the new user automatically
     const defaultBike = await Repository.createBike(newUser.id, {
-      name: 'Royal Enfield Classic 350',
-      manufacturer: 'Royal Enfield',
-      model: 'Classic 350',
-      variant: 'Standard / Dark Series',
-      year: 2022,
+      name: 'My Motorcycle',
+      manufacturer: 'Motorcycle',
+      model: 'Standard',
+      variant: '',
+      year: new Date().getFullYear(),
       initialOdometer: 0,
       currentOdometer: 0,
       tankCapacity: 13,
       reserveCapacity: 2.6,
       expectedMileage: 35.0,
       isActive: true,
-      notes: 'Initial motorcycle created automatically. You can edit this anytime or add more bikes.',
+      notes: '',
     });
 
     const token = await signToken({

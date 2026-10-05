@@ -28,8 +28,8 @@ export default function ExpensesPage() {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     category: 'Cleaning' as ExpenseCategory,
-    amount: 300,
-    odometer: 8450,
+    amount: 0,
+    odometer: activeBike?.currentOdometer || 0,
     description: '',
     notes: '',
     receiptUrl: '',
@@ -63,8 +63,8 @@ export default function ExpensesPage() {
     setFormData({
       date: new Date().toISOString().split('T')[0],
       category: 'Cleaning',
-      amount: 250,
-      odometer: activeBike?.currentOdometer || 8450,
+      amount: 0,
+      odometer: activeBike?.currentOdometer || 0,
       description: '',
       notes: '',
       receiptUrl: '',

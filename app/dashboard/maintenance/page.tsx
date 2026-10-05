@@ -36,13 +36,13 @@ export default function MaintenancePage() {
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
-    serviceType: 'Chain lubrication' as MaintenanceServiceType,
-    odometer: 8450,
-    amount: 300,
-    workshop: 'Local Garage / DIY',
+    serviceType: 'General service' as MaintenanceServiceType,
+    odometer: activeBike?.currentOdometer || 0,
+    amount: 0,
+    workshop: '',
     description: '',
     nextDueDate: '',
-    nextDueOdometer: 8950,
+    nextDueOdometer: activeBike?.currentOdometer || 0,
     notes: '',
     status: 'completed' as 'completed' | 'upcoming' | 'overdue',
   });
@@ -74,13 +74,13 @@ export default function MaintenancePage() {
     setEditingRecord(null);
     setFormData({
       date: new Date().toISOString().split('T')[0],
-      serviceType: 'Chain lubrication',
-      odometer: activeBike?.currentOdometer || 8450,
-      amount: 250,
+      serviceType: 'General service',
+      odometer: activeBike?.currentOdometer || 0,
+      amount: 0,
       workshop: '',
       description: '',
       nextDueDate: '',
-      nextDueOdometer: (activeBike?.currentOdometer || 8450) + 500,
+      nextDueOdometer: activeBike?.currentOdometer || 0,
       notes: '',
       status: 'completed',
     });

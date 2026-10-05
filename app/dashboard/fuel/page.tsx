@@ -31,13 +31,13 @@ export default function FuelLogsPage() {
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
-    time: '10:00',
-    odometer: 8500,
-    fuelQuantity: 10.0,
-    pricePerLiter: 96.72,
-    totalAmount: 967.2,
+    time: new Date().toTimeString().substring(0, 5),
+    odometer: activeBike?.currentOdometer || 0,
+    fuelQuantity: 0,
+    pricePerLiter: 0,
+    totalAmount: 0,
     isFullTank: true,
-    fuelStation: 'Indian Oil',
+    fuelStation: '',
     location: '',
     paymentMethod: 'UPI',
     notes: '',
@@ -76,16 +76,16 @@ export default function FuelLogsPage() {
 
   const openAddModal = () => {
     setEditingLog(null);
-    const lastOdo = logs.length > 0 ? logs[0].odometer + 300 : activeBike?.currentOdometer || 8450;
+    const lastOdo = logs.length > 0 ? logs[0].odometer : activeBike?.currentOdometer || 0;
     setFormData({
       date: new Date().toISOString().split('T')[0],
       time: new Date().toTimeString().substring(0, 5),
       odometer: lastOdo,
-      fuelQuantity: 10.0,
-      pricePerLiter: 96.72,
-      totalAmount: 967.2,
+      fuelQuantity: 0,
+      pricePerLiter: 0,
+      totalAmount: 0,
       isFullTank: true,
-      fuelStation: 'Indian Oil',
+      fuelStation: '',
       location: '',
       paymentMethod: 'UPI',
       notes: '',

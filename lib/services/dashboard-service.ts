@@ -194,7 +194,7 @@ export function computeDashboardData(
     : 0;
 
   const todayEstimatedCost = todayFuelConsumed > 0
-    ? Number((todayFuelConsumed * (fuelAnalytics.averagePricePerLiter || 96.5)).toFixed(2))
+    ? Number((todayFuelConsumed * (fuelAnalytics.averagePricePerLiter || 0)).toFixed(2))
     : 0;
 
   // Summary object with all required KPIs
