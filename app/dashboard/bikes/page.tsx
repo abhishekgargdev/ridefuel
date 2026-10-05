@@ -23,13 +23,13 @@ export default function BikesPage() {
     manufacturer: '',
     model: '',
     variant: '',
-    year: new Date().getFullYear(),
+    year: '' as string | number,
     registrationNumber: '',
-    initialOdometer: 0,
-    currentOdometer: 0,
-    tankCapacity: 13,
-    reserveCapacity: 2.6,
-    expectedMileage: 35.0,
+    initialOdometer: '' as string | number,
+    currentOdometer: '' as string | number,
+    tankCapacity: '' as string | number,
+    reserveCapacity: '' as string | number,
+    expectedMileage: '' as string | number,
     isActive: true,
     notes: '',
   });
@@ -41,13 +41,13 @@ export default function BikesPage() {
       manufacturer: '',
       model: '',
       variant: '',
-      year: new Date().getFullYear(),
+      year: '',
       registrationNumber: '',
-      initialOdometer: 0,
-      currentOdometer: 0,
-      tankCapacity: 13,
-      reserveCapacity: 2.6,
-      expectedMileage: 35.0,
+      initialOdometer: '',
+      currentOdometer: '',
+      tankCapacity: '',
+      reserveCapacity: '',
+      expectedMileage: '',
       isActive: bikes.length === 0,
       notes: '',
     });
@@ -67,7 +67,7 @@ export default function BikesPage() {
       initialOdometer: bike.initialOdometer,
       currentOdometer: bike.currentOdometer,
       tankCapacity: bike.tankCapacity,
-      reserveCapacity: bike.reserveCapacity || 2.6,
+      reserveCapacity: bike.reserveCapacity || '',
       expectedMileage: bike.expectedMileage,
       isActive: bike.isActive,
       notes: bike.notes || '',
@@ -90,11 +90,11 @@ export default function BikesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          year: Number(formData.year),
-          initialOdometer: Number(formData.initialOdometer),
-          currentOdometer: Number(formData.currentOdometer),
+          year: Number(formData.year) || new Date().getFullYear(),
+          initialOdometer: Number(formData.initialOdometer) || 0,
+          currentOdometer: Number(formData.currentOdometer) || 0,
           tankCapacity: Number(formData.tankCapacity),
-          reserveCapacity: Number(formData.reserveCapacity),
+          reserveCapacity: formData.reserveCapacity !== '' ? Number(formData.reserveCapacity) : undefined,
           expectedMileage: Number(formData.expectedMileage),
         }),
       });
@@ -285,7 +285,7 @@ export default function BikesPage() {
               <Input
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g. My Classic 350"
+                placeholder="e.g. My Daily Cruiser"
                 required
               />
             </div>
@@ -294,7 +294,7 @@ export default function BikesPage() {
               <Input
                 value={formData.manufacturer}
                 onChange={(e) => setFormData({ ...formData, manufacturer: e.target.value })}
-                placeholder="Royal Enfield"
+                placeholder="e.g. Honda, Yamaha, BMW"
                 required
               />
             </div>
@@ -306,7 +306,7 @@ export default function BikesPage() {
               <Input
                 value={formData.model}
                 onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                placeholder="Classic 350"
+                placeholder="e.g. CB350, Ninja 400"
                 required
               />
             </div>
@@ -315,7 +315,7 @@ export default function BikesPage() {
               <Input
                 value={formData.variant}
                 onChange={(e) => setFormData({ ...formData, variant: e.target.value })}
-                placeholder="Dark Edition"
+                placeholder="e.g. ABS Edition"
               />
             </div>
             <div>
@@ -323,7 +323,8 @@ export default function BikesPage() {
               <Input
                 type="number"
                 value={formData.year}
-                onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                placeholder="e.g. 2024"
                 required
               />
             </div>
@@ -335,7 +336,7 @@ export default function BikesPage() {
               <Input
                 value={formData.registrationNumber}
                 onChange={(e) => setFormData({ ...formData, registrationNumber: e.target.value })}
-                placeholder="DL 01 AB 3500"
+                placeholder="e.g. AB 01 CD 1234"
               />
             </div>
             <div>
@@ -343,7 +344,8 @@ export default function BikesPage() {
               <Input
                 type="number"
                 value={formData.currentOdometer}
-                onChange={(e) => setFormData({ ...formData, currentOdometer: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, currentOdometer: e.target.value })}
+                placeholder="e.g. 0"
                 required
               />
             </div>
@@ -356,8 +358,8 @@ export default function BikesPage() {
                 type="number"
                 step="0.1"
                 value={formData.tankCapacity}
-                onChange={(e) => setFormData({ ...formData, tankCapacity: Number(e.target.value) })}
-                placeholder="13"
+                onChange={(e) => setFormData({ ...formData, tankCapacity: e.target.value })}
+                placeholder="e.g. 13"
                 required
               />
             </div>
@@ -367,8 +369,8 @@ export default function BikesPage() {
                 type="number"
                 step="0.1"
                 value={formData.reserveCapacity}
-                onChange={(e) => setFormData({ ...formData, reserveCapacity: Number(e.target.value) })}
-                placeholder="2.6"
+                onChange={(e) => setFormData({ ...formData, reserveCapacity: e.target.value })}
+                placeholder="e.g. 2.6"
               />
             </div>
             <div>
@@ -377,8 +379,8 @@ export default function BikesPage() {
                 type="number"
                 step="0.1"
                 value={formData.expectedMileage}
-                onChange={(e) => setFormData({ ...formData, expectedMileage: Number(e.target.value) })}
-                placeholder="35"
+                onChange={(e) => setFormData({ ...formData, expectedMileage: e.target.value })}
+                placeholder="e.g. 35"
                 required
               />
             </div>
@@ -389,7 +391,7 @@ export default function BikesPage() {
             <Input
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              placeholder="e.g. Dual-channel ABS, alloy wheels"
+              placeholder="e.g. Custom exhaust, alloy wheels"
             />
           </div>
 

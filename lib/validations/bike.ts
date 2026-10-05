@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const bikeSchema = z.object({
   name: z.string().min(2, 'Bike nickname must be at least 2 characters').max(60),
-  manufacturer: z.string().min(2, 'Manufacturer is required').default('Royal Enfield'),
-  model: z.string().min(1, 'Model is required').default('Classic 350'),
+  manufacturer: z.string().min(2, 'Manufacturer is required'),
+  model: z.string().min(1, 'Model is required'),
   variant: z.string().optional(),
   year: z
     .number()
@@ -15,7 +15,7 @@ export const bikeSchema = z.object({
   initialOdometer: z.number().min(0, 'Initial odometer cannot be negative'),
   currentOdometer: z.number().min(0, 'Current odometer cannot be negative').optional(),
   tankCapacity: z.number().positive('Tank capacity must be greater than 0').max(100),
-  reserveCapacity: z.number().min(0).max(30).optional().default(2.6),
+  reserveCapacity: z.number().min(0).max(30).optional(),
   expectedMileage: z.number().positive('Expected mileage must be greater than 0').max(150),
   isActive: z.boolean().optional().default(false),
   notes: z.string().max(1000).optional(),
